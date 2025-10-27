@@ -1,15 +1,17 @@
 name: infra-ci
 on: [pull_request]
+permissions:
+  id-token: write
+  contents: read
 jobs:
   plan:
-    permissions: { id-token: write, contents: read }
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::'"$ACC"':role/GitHubTerraformPlanReadOnly
-          aws-region: '"$REGION"'
+          role-to-assume: arn:aws:iam::632243203169:role/GitHubTerraformPlanReadOnly
+          aws-region: ap-northeast-2
       - run: terraform init -backend=false
       - run: terraform fmt -check && terraform validate
